@@ -6,7 +6,11 @@ import {
   Node,
 } from '../../../pages/HomePage';
 import { Button } from '@mui/material';
-import { getMyColor } from '../../../scripts.js';
+
+const getMyColor = () => {
+  let n = (Math.random() * 0xfffff * 1000000).toString(16);
+  return '#' + n.slice(0, 6);
+};
 
 const UploadButton = () => {
   const { setNodes }: any = useContext(NodesContext);
