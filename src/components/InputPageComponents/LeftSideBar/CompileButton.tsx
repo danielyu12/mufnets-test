@@ -25,7 +25,7 @@ const CompileButton = () => {
     });
     const output = { Edges: outputEdges, Nodes: outputNodes };
     axios
-      .post('https://danielyu12.pythonanywhere.com', {
+      .post('https://127.0.0.1:5000', {
         graph: output,
       })
       .then((res) => {
