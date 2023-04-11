@@ -7,6 +7,7 @@ import {
   Node,
 } from '../../../pages/HomePage';
 import { useOutletContext, useNavigate } from 'react-router-dom';
+import { algorithm } from '../../../Algorithm.js';
 import axios from 'axios';
 
 const CompileButton = () => {
@@ -29,11 +30,16 @@ const CompileButton = () => {
         graph: output,
       })
       .then((res) => {
-        setOutput(JSON.stringify(res.data));
+        const [predArray, topoOrder, orderedAdj, endpoints, unfolded] =
+          res.data;
+        setOutput({ predArray, topoOrder, orderedAdj, endpoints, unfolded });
       })
       .catch((err) => {
         console.log(err);
       });
+    // const [predArray, topoOrder, orderedAdj, endpoints, unfolded]: any =
+    //   algorithm(outputNodes[0], outputNodes, outputEdges);
+    // setOutput({ predArray, topoOrder, orderedAdj, endpoints, unfolded });
     navigate('/output');
   };
   return (

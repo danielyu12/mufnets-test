@@ -23,12 +23,14 @@ const EdgeList = () => {
   return (
     <div>
       <Typography variant="h6">Connected Nodes</Typography>
-      <div>
+      <div className="connected-edge-list">
         {currentEdges.map(({ target }: any) => {
-          return <Connection edgeName={target} />;
+          return (
+            <Connection key={`${selectedNode}->${target}`} edgeName={target} />
+          );
         })}
-        <AddEdge />
       </div>
+      <AddEdge />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import UploadButton from './UploadButton';
 import EdgesList from './EdgesList';
 import NodesList from './NodesList';
 import CreateNodeForm from './CreateNodeForm';
+import CanvasDownloadButton from './CanvasDownloadButton';
 import './LeftSidebar.css';
 
 const LeftSidebar = () => {
@@ -16,6 +17,7 @@ const LeftSidebar = () => {
       <div className="buttons-container">
         <UploadButton />
         <CompileButton />
+        <CanvasDownloadButton />
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   useSigma,
   ControlsContainer,
   ZoomControl,
+  useSetSettings,
 } from '@react-sigma/core';
 import { useLayoutCircular } from '@react-sigma/layout-circular';
 import { MultiDirectedGraph } from 'graphology';
@@ -20,11 +21,12 @@ import '@react-sigma/core/lib/react-sigma.min.css';
 import './Canvas.css';
 
 const LoadGraphWithHook: FC = () => {
+  const { nodes }: any = useContext(NodesContext);
+  const { edges }: any = useContext(EdgesContext);
+  const { nodeColors }: any = useContext(NodeColorsContext);
   const Graph: FC = () => {
     const loadGraph = useLoadGraph();
-    const { nodes }: any = useContext(NodesContext);
-    const { edges }: any = useContext(EdgesContext);
-    const { nodeColors }: any = useContext(NodeColorsContext);
+
     const { assign } = useLayoutCircular();
 
     useEffect(() => {
@@ -40,7 +42,7 @@ const LoadGraphWithHook: FC = () => {
 
       edges.forEach(({ name, source, target }: any) => {
         graph.addEdgeWithKey(name, source, target, {
-          size: 7,
+          size: 5,
           color: nodeColors[source],
         });
       });
@@ -56,8 +58,10 @@ const LoadGraphWithHook: FC = () => {
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
     const { edges }: any = useContext(EdgesContext);
-    const { setSelectedNode }: any = useContext(SelectedNodeContext);
+    const { selectedNode, setSelectedNode }: any =
+      useContext(SelectedNodeContext);
     const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
+    const setSettings = useSetSettings();
 
     useEffect(() => {
       registerEvents({
@@ -75,6 +79,10 @@ const LoadGraphWithHook: FC = () => {
         clickNode: (e) => {
           setSelectedNode(e.node);
         },
+        clickStage: (e) => {
+          setSelectedNode('');
+          setSelectedEdge('');
+        },
         clickEdge: (e) => {
           const [node1, node2]: string[] = e.edge.split('->');
           const parallel = edges.filter((edge: any) => {
@@ -89,6 +97,42 @@ const LoadGraphWithHook: FC = () => {
         },
       });
     }, [registerEvents, sigma]);
+
+    useEffect(() => {
+      setSettings({
+        nodeReducer: (node, data) => {
+          const graph = sigma.getGraph();
+          const newData: any = {
+            ...data,
+            highlighted: data.highlighted || false,
+          };
+          //Causes errors in console but seems to be working solution to fix a breaking error
+          setTimeout(() => {
+            if (selectedNode != '') {
+              const includes = graph.neighbors(selectedNode).includes(node);
+              if (node === selectedNode || includes) {
+                newData.highlighted = true;
+              } else {
+                newData.color = '#E2E2E2';
+                newData.highlighted = false;
+              }
+            }
+          }, 1);
+          return newData;
+        },
+        edgeReducer: (edge, data) => {
+          const graph = sigma.getGraph();
+          const newData = { ...data, hidden: false };
+          if (
+            selectedNode != '' &&
+            !graph.extremities(edge).includes(selectedNode)
+          ) {
+            newData.hidden = true;
+          }
+          return newData;
+        },
+      });
+    }, [selectedNode, nodes, edges, setSettings, sigma]);
 
     return null;
   };

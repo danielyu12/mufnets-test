@@ -1,14 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts';
+import MCM from '../MicrofluidicControllers/MCM';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  ReferenceLine,
+  Customized,
+} from 'recharts';
 
-const OutputDisplay = () => {
+const OutputDisplay = ({ screenshotRef }: any) => {
   const { output }: any = useOutletContext();
   const [currentNetwork, setCurrentNetwork] = useState<any>(null);
+
   useEffect(() => {
     if (output != '') {
-      const [predArray, topoOrder, orderedAdj, endpoints, unfolded] =
-        JSON.parse(output);
+      const { predArray, topoOrder, orderedAdj, endpoints, unfolded } = output;
       const sources = Object.keys(orderedAdj);
       const values = sources.map((key: string) => {
         const [row, target] = orderedAdj[key][0];
@@ -26,11 +34,11 @@ const OutputDisplay = () => {
   }, [output]);
 
   return (
-    <div className="display-container">
+    <div className="display-container" ref={screenshotRef}>
       {currentNetwork && (
         <LineChart
-          width={730}
-          height={500}
+          width={1000}
+          height={700}
           margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
         >
           <XAxis
@@ -64,7 +72,7 @@ const OutputDisplay = () => {
           {currentNetwork.values.map((connection: any) => {
             return (
               <Line
-                type="monotone"
+                type={MCM}
                 dataKey="value"
                 data={connection.data}
                 key={connection.name}
