@@ -7,7 +7,7 @@ import {
   Node,
 } from '../../../pages/HomePage';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { algorithm } from '../../../Algorithm.js';
+// import { algorithm } from '../../../Algorithm.js';
 import axios from 'axios';
 
 const CompileButton = () => {

@@ -72,7 +72,6 @@ const OutputDisplay = ({ screenshotRef }: any) => {
           {currentNetwork.values.map((connection: any) => {
             return (
               <Line
-                type={MCM}
                 dataKey="value"
                 data={connection.data}
                 key={connection.name}

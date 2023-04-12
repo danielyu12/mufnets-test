@@ -1,7 +1,12 @@
 import { Typography, TextField, Button, Select, MenuItem } from '@mui/material';
 import { useState, useContext } from 'react';
 import { NodesContext, NodeColorsContext } from '../../../pages/HomePage';
-import { getMyColor } from '../../../scripts.js';
+// import { getMyColor } from '../../../scripts.js';
+
+export const getMyColor = () => {
+  let n = (Math.random() * 0xfffff * 1000000).toString(16);
+  return '#' + n.slice(0, 6);
+};
 
 const CreateNodeForm = () => {
   const [nodeInfo, setNodeInfo] = useState<any>({
